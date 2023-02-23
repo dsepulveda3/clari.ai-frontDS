@@ -1,0 +1,66 @@
+body {
+  margin: 0
+}
+
+textarea:focus, :focus-visible {
+  outline: none;
+}
+
+@keyframes ring {
+  0% {
+    rotate: 0deg;
+  }
+  25% {
+    rotate: -5deg;
+  }
+  35% {
+    rotate: 5deg;
+  }
+  45% {
+    rotate: -5deg;
+  }
+  55% {
+    rotate: 5deg;
+  }
+  65% {
+    rotate: -5deg;
+  }
+  75% {
+    rotate: 5deg;
+  }
+  100% {
+    rotate: 0deg;
+  }
+}
+
+.loader {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: inline-block;
+  border-top: 4px solid #35A7BB;
+  border-right: 4px solid transparent;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+}
+.loader::after {
+  content: '';  
+  box-sizing: border-box;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border-left: 4px solid #4ED4C4;
+  border-bottom: 4px solid transparent;
+  animation: rotation 0.5s linear infinite reverse;
+}
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+} 
