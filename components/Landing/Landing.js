@@ -207,7 +207,7 @@ const css = {
     margin: '12px 0px 12px 0px'
   },
   subtitle: {
-    fontSize: "25px",
+    // fontSize: "25px",
     fontWeight: 'bold',
     color: ' #FFFFFF'
   }
