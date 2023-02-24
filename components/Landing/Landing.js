@@ -242,8 +242,8 @@ function Landing({ value }) {
         <Box sx={css.landingCatch}>
           <Box sx={css.catchInfo}>
             <Typography variant='h1'>{T(dict.t1)}</Typography>
-            <Typography variant='h2'>{T(dict.t2)}</Typography>
-            <Typography variant='h2'>{T(dict.t3)}</Typography>
+            <Typography variant='h1'>{T(dict.t2)}</Typography>
+            {/* <Typography variant='h2'>{T(dict.t3)}</Typography> */}
             <Typography variant='body1' sx={css.catchPar}>
               {T(dict.catch)}
             </Typography>
