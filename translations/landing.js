@@ -1,11 +1,11 @@
 const landing = {
   t1: {
-    en: "Learn quicker trough AI",
+    en: "Learn quicker trough AI.",
     es: "Aprende más rápido con AI."
   },
   t2: {
-    en: "For FREE",
-    es: "GRATIS"
+    en: "For FREE.",
+    es: "GRATIS."
   },
   t3: {
     en: "For FREE.",
