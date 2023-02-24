@@ -1,11 +1,11 @@
 const landing = {
   t1: {
-    en: "YES Instant answers to your academic questions.",
+    en: "Instant answers to your academic questions.",
     es: "Respuestas instantáneas a tus preguntas."
   },
   t2: {
-    en: "Using Artificial Inteligence.",
-    es: "Usando Inteligencia Artificial."
+    en: "Using AI.",
+    es: "Usando IA."
   },
   t3: {
     en: "For FREE.",
