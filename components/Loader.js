@@ -21,7 +21,7 @@ const css = {
   }
 }
 
-function Loader({ timerDuration = 15 }) {
+function Loader({ timerDuration = 20 }) {
   const [timeLeft, setTimeLeft] = useState(timerDuration)
 
   useEffect(() => {

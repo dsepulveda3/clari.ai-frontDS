@@ -58,7 +58,7 @@ function Header({ square }) {
   return (
     <Box sx={{ ...css.container, borderRadius: square ? 0 : "0 0 12px 12px" }}>
       <Box sx={css.inline}>
-        <Image style={css.image} src="/logo.png" alt="logo" height={35} onClick={() => router.push("/")} />
+        <img style={css.image} src="/logo.png" alt="logo" height={35} onClick={() => router.push("/")} />
         <Box sx={css.select}>
           <Select fullWidth value={lang} onChange={onChange} size="small">
             <MenuItem value="en" sx={css.menuItem}>

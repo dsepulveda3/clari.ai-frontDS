@@ -72,7 +72,7 @@ function OpinionForm(props) {
                 placeholder="Give us your opinion about the answer"
             />
             <Box sx={{ textAlign: 'end', margin: '12px 0' }}>
-                <Button style={css.buttons} onClick={handleSubmit} color="secondary" variant="contained" endIcon={<Send />}>
+                <Button ref={props.elementRef} style={css.buttons} onClick={handleSubmit} color="secondary" variant="contained" endIcon={<Send />}>
                     Submit
                 </Button>
             </Box>

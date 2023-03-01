@@ -264,7 +264,7 @@ function Landing({ value }) {
             </Box>
           </Box>
           <Box sx={css.mainImageContainer}>
-            <Image src="/first.svg" alt="catch" />
+            <img src="/first.svg" alt="catch" />
           </Box>
         </Box>
       </Box>

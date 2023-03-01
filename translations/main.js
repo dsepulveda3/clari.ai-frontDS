@@ -28,8 +28,8 @@ const main = {
     es: "¿Cómo lo podemos hacer mejor?"
   },
   waiting_time_answer: {
-    en: "Answers can take up to 5-15 seconds",
-    es: "Respuestas pueden tomar hasta 5-15 segundos"
+    en: "Answers can take up to 5-20 seconds",
+    es: "Respuestas pueden tomar hasta 5-20 segundos"
   }
 }
 

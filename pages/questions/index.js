@@ -69,11 +69,15 @@ function Questions({ value }) {
   const [showPopup, setShowPopup] = useState(false);
   const [thanksFeedback, setThanksFeedback] = useState(false);
   const [contentFeedback, setFeedbackContent] = useState("");
+  const elementRef = useRef(null);
 
   useEffect(() => {
     if (showPopup) {
       // Trigger pop-up code here
       console.log("Pop-up triggered!");
+      // elementRef.current.scrollIntoView({ behaviour: 'smooth' });
+
+
     }
   }, [showPopup]);
 
@@ -119,11 +123,15 @@ function Questions({ value }) {
         const response = await like_question({ id: question.id })
         setQuestion(response.data.info)
         setShowPopup(true);
+        // elementRef.current.scrollIntoView({ behavior: 'smooth' });
+        setTimeout(() => elementRef.current.scrollIntoView({ behavior: 'smooth' }), 300);
         setThanksFeedback(false);
       } else {
         const response = await dislike_question({ id: question.id })
         setQuestion(response.data.info)
         setShowPopup(true);
+        // elementRef.current.scrollIntoView({ behavior: 'smooth' });
+        setTimeout(() => elementRef.current.scrollIntoView({ behavior: 'smooth' }), 300);
         setThanksFeedback(false)
       }
     }
@@ -176,7 +184,7 @@ function Questions({ value }) {
             </Box>
           </Box>
         }
-        {showPopup && <OpinionForm setShowPopup={setShowPopup} setThanksFeedback={setThanksFeedback} contentFeedback={contentFeedback}
+        {showPopup && <OpinionForm elementRef={elementRef} setShowPopup={setShowPopup} setThanksFeedback={setThanksFeedback} contentFeedback={contentFeedback}
           setFeedbackContent={setFeedbackContent} createFeedbackQuestion={createFeedbackQuestion} T={T} D={D} />}
         {thanksFeedback && <Typography variant='h4'>{T(D.feedback_received)}</Typography>}
         {/* {thanksFeedback && <Typography variant='h4'>{contentFeedback}</Typography>} */}
