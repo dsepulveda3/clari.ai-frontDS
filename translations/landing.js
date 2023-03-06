@@ -90,6 +90,10 @@ const landing = {
   register: {
     en: "Register",
     es: "Registrarme"
+  },
+  share: {
+    en: "Share",
+    es: "Compartir"
   }
 }
 

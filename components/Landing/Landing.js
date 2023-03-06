@@ -1,5 +1,6 @@
 import { Send } from '@mui/icons-material'
 import { Box, Button, IconButton, Paper, Typography } from '@mui/material'
+import Fab from "@mui/material/Fab"
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { useContext, useState } from 'react'
@@ -10,6 +11,7 @@ import Header from '../Header'
 import TextInput from '../TextInput'
 import LandingSubjects from './LandingSubjects'
 import { Router } from 'react-router-dom'
+import { FloatingWhatsApp } from 'react-floating-whatsapp'
 
 const css = {
   container: {
@@ -210,7 +212,39 @@ const css = {
     // fontSize: "25px",
     fontWeight: 'bold',
     color: ' #FFFFFF'
-  }
+  },
+  sharebutton: {
+    padding: '8px 16px',
+    display: 'flex',
+    justifyContent: 'center',
+    position: 'fixed',
+    bottom: '20px',
+    right: '20px',
+    zIndex: 5,
+    background: '#00BB2D',
+    borderRadius: '50px',
+  },
+  sx: {
+    position: "fixed",
+    right: "16px",
+    bottom: "16px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: "8px 16px",
+    backgroundColor: "#2AA81A",
+    color: "white",
+    borderRadius: "50px",
+    cursor: "pointer",
+    backgroundImage: "url('whatsapp.png')",
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "contain",
+    width: "200px",
+    "&:hover": {
+      backgroundColor: "#2AA81A"
+    }
+  },
+
 }
 // heu
 
@@ -238,6 +272,15 @@ function Landing({ value }) {
   return (
     <Box>
       <Header square />
+      <Fab sx={css.sx} href="https://www.google.com">
+        {T(dict.share)}
+      </Fab>
+      {/* <Fab sx={css.fab}>
+        <div sx={css.icon}></div>
+        <div sx={css.text}>Share</div>
+      </Fab> */}
+
+
       <Box sx={css.firstSection}>
         <Box sx={css.landingCatch}>
           <Box sx={css.catchInfo}>
