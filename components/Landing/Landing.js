@@ -272,7 +272,7 @@ function Landing({ value }) {
   return (
     <Box>
       <Header square />
-      <Fab sx={css.sx} href="https://www.google.com">
+      <Fab sx={css.sx} href={T(dict.share_text)}>
         {T(dict.share)}
       </Fab>
       {/* <Fab sx={css.fab}>

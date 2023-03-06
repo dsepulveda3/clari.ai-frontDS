@@ -94,6 +94,10 @@ const landing = {
   share: {
     en: "Share",
     es: "Compartir"
+  },
+  share_text: {
+    en: "https://api.whatsapp.com/send?text=%20Mira%20esta%20App%20que%20resuelve%20dudas%20academicas%20con%20Inteligencia%20Artificial%20https://app.clariapp.com",
+    es: "https://api.whatsapp.com/send?text=%20Look%20at%20this%20App%20that%20solves%20academic%20questions%thru%20Artificial%20Intelligence%20https://app.clariapp.com"
   }
 }
 
