@@ -21,34 +21,40 @@ import Switch from '@mui/material/Switch';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
+import { database } from '../../API/questions';
 
-function createData(question, answer, like, dislike, feedback, prompt) {
-    return {
-        question,
-        answer,
-        like,
-        dislike,
-        feedback,
-        prompt
-    };
-}
+// function createData(question, answer, like, dislike, feedback, prompt) {
+//     return {
+//         question,
+//         answer,
+//         like,
+//         dislike,
+//         feedback,
+//         prompt
+//     };
+// }
 
-const rows = [
-    createData('Question 1', 'Answer 1', 'Like 1', 'Dislike 1', 'Feedback 1', 'Propmt 1'),
-    createData('Question 2', 'Answer 2', 'Like 2', 'Dislike 2', 'Feedback 1', 'Propmt 1'),
-    createData('Question 3', 'Answer 3', 'Like 3', 'Dislike 3', 'Feedback 1', 'Propmt 1'),
-    createData('Question 4', 'Answer 4', 'Like 4', 'Dislike 4', 'Feedback 1', 'Propmt 1'),
-    createData('Question 5', 'Answer 5', 'Like 5', 'Dislike 1', 'Feedback 1', 'Propmt 1'),
-    createData('Question 6', 'Answer 6', 'Like 6', 'Dislike 1', 'Feedback 1', 'Propmt 1'),
-    createData('Question 7', 'Answer 7', 'Like 7', 'Dislike 1', 'Feedback 1', 'Propmt 1'),
-    createData('Question 8', 'Answer 8', 'Like 8', 'Dislike 1', 'Feedback 1', 'Propmt 1'),
-    createData('Question 9', 'Answer 9', 'Like 9', 'Dislike 1', 'Feedback 1', 'Propmt 1'),
-    createData('Question 10', 'Answer 10', 'Like 10', 'Dislike 1', 'Feedback 1', 'Propmt 1'),
-    createData('Question 11', 'Answer 11', 'Like 11', 'Dislike 1', 'Feedback 1', 'Propmt 1'),
-    createData('Question 12', 'Answer 12', 'Like 12', 'Dislike 1', 'Feedback 1', 'Propmt 1'),
-    createData('Question 13', 'Answer 13', 'Like 13', 'Dislike 1', 'Feedback 1', 'Propmt 1'),
-    createData('Question 14', 'Answer 14', 'Like 14', 'Dislike 1', 'Feedback 1', 'Propmt 1'),
-];
+const null_feedback = "No feedback"
+const null_valuation = "No valuation"
+const null_useful = "No useful insight"
+const prompt = "If this is a math or physics exercise explain how to solve it theoretically, give me an example and then solve the example and the question step by step. Otherwise, if it is a conceptual question explain in simple terms, detailed, first defining difficult concepts that will be used in the explanation."
+
+// const rows = [
+//     createData('Question 1', 'Answer 1', 'Like 1', 'Dislike 1', 'Feedback 1', 'Propmt 1'),
+//     createData('Question 2', 'Answer 2', 'Like 2', 'Dislike 2', 'Feedback 1', 'Propmt 1'),
+//     createData('Question 3', 'Answer 3', 'Like 3', 'Dislike 3', 'Feedback 1', 'Propmt 1'),
+//     createData('Question 4', 'Answer 4', 'Like 4', 'Dislike 4', 'Feedback 1', 'Propmt 1'),
+//     createData('Question 5', 'Answer 5', 'Like 5', 'Dislike 1', 'Feedback 1', 'Propmt 1'),
+//     createData('Question 6', 'Answer 6', 'Like 6', 'Dislike 1', 'Feedback 1', 'Propmt 1'),
+//     createData('Question 7', 'Answer 7', 'Like 7', 'Dislike 1', 'Feedback 1', 'Propmt 1'),
+//     createData('Question 8', 'Answer 8', 'Like 8', 'Dislike 1', 'Feedback 1', 'Propmt 1'),
+//     createData('Question 9', 'Answer 9', 'Like 9', 'Dislike 1', 'Feedback 1', 'Propmt 1'),
+//     createData('Question 10', 'Answer 10', 'Like 10', 'Dislike 1', 'Feedback 1', 'Propmt 1'),
+//     createData('Question 11', 'Answer 11', 'Like 11', 'Dislike 1', 'Feedback 1', 'Propmt 1'),
+//     createData('Question 12', 'Answer 12', 'Like 12', 'Dislike 1', 'Feedback 1', 'Propmt 1'),
+//     createData('Question 13', 'Answer 13', 'Like 13', 'Dislike 1', 'Feedback 1', 'Propmt 1'),
+//     createData('Question 14', 'Answer 14', 'Like 14', 'Dislike 1', 'Feedback 1', 'Propmt 1'),
+// ];
 
 function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -119,6 +125,12 @@ const headCells = [
         disablePadding: false,
         label: 'Prompt',
     },
+    {
+        id: 'date',
+        numeric: true,
+        disablePadding: false,
+        label: 'Creation Date',
+    }
 ];
 
 function EnhancedTableHead(props) {
@@ -239,6 +251,7 @@ export default function EnhancedTable() {
     const [page, setPage] = React.useState(0);
     const [dense, setDense] = React.useState(false);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
+    const [rows, setRows] = React.useState([]);
 
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc';
@@ -256,6 +269,7 @@ export default function EnhancedTable() {
     };
 
     const handleClick = (event, question) => {
+        // conectar con back
         const selectedIndex = selected.indexOf(question);
         let newSelected = [];
 
@@ -288,6 +302,36 @@ export default function EnhancedTable() {
         setDense(event.target.checked);
     };
 
+    const fetchRows = async () => {
+        const data = await database();
+        data.data.map((row) => {
+            if (row.feedback != null) {
+                const feedback_use = row.feedback.feedback;
+                row.feedback = feedback_use;
+            } else {
+                row.feedback = null_feedback;
+            }
+            if (row.valuation != null) {
+                if (row.valuation.is_positive) {
+                    row.like = "True";
+                    row.dislike = "False";
+                } else {
+                    row.like = "False";
+                    row.dislike = "True";
+                }
+            } else {
+                row.like = null_valuation;
+                row.dislike = null_valuation;
+            }
+        })
+        setRows(data.data);
+    }
+
+
+    React.useEffect(() => {
+        fetchRows()
+    }, []);
+
     const isSelected = (question) => selected.indexOf(question) !== -1;
 
     // Avoid a layout jump when reaching the last page with empty rows.
@@ -316,13 +360,13 @@ export default function EnhancedTable() {
                             {stableSort(rows, getComparator(order, orderBy))
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((row, index) => {
-                                    const isItemSelected = isSelected(row.question);
+                                    const isItemSelected = isSelected(row.content);
                                     const labelId = `enhanced-table-checkbox-${index}`;
 
                                     return (
                                         <TableRow
                                             hover
-                                            onClick={(event) => handleClick(event, row.question)}
+                                            onClick={(event) => handleClick(event, row.content)}
                                             role="checkbox"
                                             aria-checked={isItemSelected}
                                             tabIndex={-1}
@@ -344,13 +388,14 @@ export default function EnhancedTable() {
                                                 scope="row"
                                                 padding="none"
                                             >
-                                                {row.question}
+                                                {row.content}
                                             </TableCell>
                                             <TableCell align="right">{row.answer}</TableCell>
                                             <TableCell align="right">{row.like}</TableCell>
                                             <TableCell align="right">{row.dislike}</TableCell>
                                             <TableCell align="right">{row.feedback}</TableCell>
-                                            <TableCell align="right">{row.prompt}</TableCell>
+                                            <TableCell align="right">{prompt}</TableCell>
+                                            <TableCell align="right">{row.created_at}</TableCell>
                                         </TableRow>
                                     );
                                 })}

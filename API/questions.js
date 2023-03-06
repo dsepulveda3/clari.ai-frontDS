@@ -31,3 +31,10 @@ export function feedback_question(body) {
     data: body
   })
 }
+
+export function database() {
+  return instance({
+    method: 'get',
+    url: 'database'
+  })
+}
