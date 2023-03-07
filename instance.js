@@ -12,7 +12,7 @@ import axios from "axios"
 
 const isLocalhost = false
 
-export const mainUrl = `https://clariapp.herokuapp.com/api`
+export const mainUrl = `https://clari-staging.herokuapp.com/api`
 
 const instance = axios.create({
   baseURL: mainUrl,

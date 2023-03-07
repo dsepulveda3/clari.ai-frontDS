@@ -31,3 +31,17 @@ export function feedback_question(body) {
     data: body
   })
 }
+
+export function database(page, number) {
+  return instance({
+    method: 'get',
+    url: `database?page=${page}&entries=${number}`,
+  })
+}
+
+export function count() {
+  return instance({
+    method: 'get',
+    url: `database/count`,
+  })
+}

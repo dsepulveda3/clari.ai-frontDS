@@ -26,7 +26,7 @@ const css = {
   },
   landingCatch: {
     display: 'flex',
-    '& > *:first-child': {
+    '& > *:first-of-type': {
       flexBasis: '60%',
       '@media (max-width:1024px)': {
         flexBasis: '100%'
