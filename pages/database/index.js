@@ -21,7 +21,7 @@ import Switch from '@mui/material/Switch';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
-import { database } from '../../API/questions';
+import { database, count } from '../../API/questions';
 
 // function createData(question, answer, like, dislike, feedback, prompt) {
 //     return {
@@ -252,6 +252,38 @@ export default function EnhancedTable() {
     const [dense, setDense] = React.useState(false);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const [rows, setRows] = React.useState([]);
+    const [total, setTotal] = React.useState(0);
+
+    const fetchRows = async (page, entries) => {
+        const data = await database(page, entries);
+        data.data.map((row) => {
+            if (row.feedback != null) {
+                const feedback_use = row.feedback.feedback;
+                row.feedback = feedback_use;
+            } else {
+                row.feedback = null_feedback;
+            }
+            if (row.valuation != null) {
+                if (row.valuation.is_positive) {
+                    row.like = "True";
+                    row.dislike = "False";
+                } else {
+                    row.like = "False";
+                    row.dislike = "True";
+                }
+            } else {
+                row.like = null_valuation;
+                row.dislike = null_valuation;
+            }
+        })
+        setRows(data.data);
+    }
+
+    const totalCount = async () => {
+        const total = await count();
+        setTotal(total.data.count);
+    }
+
 
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc';
@@ -269,7 +301,6 @@ export default function EnhancedTable() {
     };
 
     const handleClick = (event, question) => {
-        // conectar con back
         const selectedIndex = selected.indexOf(question);
         let newSelected = [];
 
@@ -302,41 +333,19 @@ export default function EnhancedTable() {
         setDense(event.target.checked);
     };
 
-    const fetchRows = async () => {
-        const data = await database();
-        data.data.map((row) => {
-            if (row.feedback != null) {
-                const feedback_use = row.feedback.feedback;
-                row.feedback = feedback_use;
-            } else {
-                row.feedback = null_feedback;
-            }
-            if (row.valuation != null) {
-                if (row.valuation.is_positive) {
-                    row.like = "True";
-                    row.dislike = "False";
-                } else {
-                    row.like = "False";
-                    row.dislike = "True";
-                }
-            } else {
-                row.like = null_valuation;
-                row.dislike = null_valuation;
-            }
-        })
-        setRows(data.data);
-    }
-
+    React.useEffect(() => {
+        totalCount()
+    }, []);
 
     React.useEffect(() => {
-        fetchRows()
-    }, []);
+        fetchRows(page + 1, rowsPerPage)
+    }, [page, rowsPerPage]);
 
     const isSelected = (question) => selected.indexOf(question) !== -1;
 
     // Avoid a layout jump when reaching the last page with empty rows.
     const emptyRows =
-        page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+        page > 0 ? Math.max(0, (1 + page) * rowsPerPage - total) : 0;
 
     return (
         <Box sx={{ width: '100%' }}>
@@ -354,11 +363,10 @@ export default function EnhancedTable() {
                             orderBy={orderBy}
                             onSelectAllClick={handleSelectAllClick}
                             onRequestSort={handleRequestSort}
-                            rowCount={rows.length}
+                            rowCount={total}
                         />
                         <TableBody>
                             {stableSort(rows, getComparator(order, orderBy))
-                                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((row, index) => {
                                     const isItemSelected = isSelected(row.content);
                                     const labelId = `enhanced-table-checkbox-${index}`;
@@ -414,7 +422,7 @@ export default function EnhancedTable() {
                 <TablePagination
                     rowsPerPageOptions={[5, 10, 25]}
                     component="div"
-                    count={rows.length}
+                    count={total}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onPageChange={handleChangePage}

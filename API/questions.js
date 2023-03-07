@@ -32,9 +32,16 @@ export function feedback_question(body) {
   })
 }
 
-export function database() {
+export function database(page, number) {
   return instance({
     method: 'get',
-    url: 'database'
+    url: `database?page=${page}&entries=${number}`,
+  })
+}
+
+export function count() {
+  return instance({
+    method: 'get',
+    url: `database/count`,
   })
 }
