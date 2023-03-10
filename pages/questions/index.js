@@ -61,7 +61,7 @@ const css = {
   question: {
     textAlign: 'center',
     fontWeight: 'bold',
-    marginTop: 3
+    marginTop: 20
   }
 }
 
@@ -117,16 +117,24 @@ function Questions({ value }) {
 
   async function createQuestion(e, forced_content = "") {
     if (attempt == 3) {
-      setAttempt(0)
+      const body = { content: forced_content ? forced_content : content, lang, attempt: 0 }
+      setThanksFeedback(false)
+      setShowPopup(false)
+      setLoading(true)
+      const response = await create_question(body)
+      setLoading(false)
+      setQuestion(response.data.info)
+      setAttempt(1)
+    } else {
+      const body = { content: forced_content ? forced_content : content, lang, attempt: attempt }
+      setThanksFeedback(false)
+      setShowPopup(false)
+      setLoading(true)
+      const response = await create_question(body)
+      setLoading(false)
+      setQuestion(response.data.info)
+      setAttempt(attempt + 1)
     }
-    const body = { content: forced_content ? forced_content : content, lang, attempt }
-    setThanksFeedback(false)
-    setShowPopup(false)
-    setLoading(true)
-    const response = await create_question(body)
-    setLoading(false)
-    setQuestion(response.data.info)
-    setAttempt(attempt + 1)
   }
 
   async function createFeedbackQuestion(e, forced_content = "") {
@@ -185,7 +193,7 @@ function Questions({ value }) {
         <TextInput onChange={e => setContent(e.target.value)} value={content} />
         <Box sx={{ textAlign: 'end', margin: '12px 0' }}>
           <Typography style={css.waiting_time} variant='h5'>{T(D.waiting_time_answer)}</Typography>
-          <Button disabled={loading || !retry} color="secondary" variant="contained" onClick={createQuestion} endIcon={<Send />}>
+          <Button disabled={loading || !retry || !content} color="secondary" variant="contained" onClick={createQuestion} endIcon={<Send />}>
             {T(D.ask)}
           </Button>
         </Box>
@@ -193,10 +201,10 @@ function Questions({ value }) {
         {!!question.answer && !loading &&
           <Box>
             <Divider orientation="horizontal" flexItem />
-            <Typography variant='subtitle2'>{T(D.answer_title) + attempt + ")"}</Typography>
+            <Typography variant='subtitle2'>{T(D.answer_title) + attempt + "/3)"}</Typography>
             <textarea readOnly style={css.textarea} ref={answerRect} />
             <Typography style={css.disclaimer} variant='h5'>{T(D.disclaimer)}</Typography>
-            <Button disabled={retry} color="info" variant="contained" onClick={createQuestion} endIcon={<Cached />}>
+            <Button disabled={retry || !content} color="info" variant="contained" onClick={createQuestion} endIcon={<Cached />}>
               {T(D.change_prompt)}
             </Button>
             <Typography style={css.question} variant='h4'>{T(D.usefull)}</Typography>
