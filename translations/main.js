@@ -1,18 +1,22 @@
 const main = {
+  title: {
+    en: "Get homework help",
+    es: "Obten ayuda para tus tareas"
+  },
   input_text: {
     en: "Ask anything!",
     es: "¡Pregunta lo que sea!"
   },
   answer_title: {
-    en: "Here is your answer",
-    es: "Aquí está tu respuesta"
+    en: "AI answer (attempt ",
+    es: "Respuesta de la IA (intento "
   },
   usefull: {
-    en: "Was this answer usefull?",
+    en: "Was this answer helpful?",
     es: "¿Te fue util esta pregunta?"
   },
   ask: {
-    en: "Send my question!",
+    en: "Go!",
     es: "Enviar pregunta"
   },
   ask_again: {
@@ -30,7 +34,15 @@ const main = {
   waiting_time_answer: {
     en: "Answers can take up to 5-20 seconds",
     es: "Respuestas pueden tomar hasta 5-20 segundos"
-  }
+  },
+  change_prompt: {
+    en: "Try AI again",
+    es: "Prueba la AI de nuevo"
+  },
+  disclaimer: {
+    en: "Note: not all AI answers are correct. Use AI answers as a guideline for learning",
+    es: "Nota: no todas las respuestas de la IA son correctas. Utiliza las respuestas de la IA como una guía para el aprendizaje."
+  },
 }
 
 export default main
