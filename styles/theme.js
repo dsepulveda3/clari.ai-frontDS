@@ -16,7 +16,6 @@ const theme = createTheme({
     },
     dark: {
       main: "#333333",
-      light: "#606060"
     },
     light: {
       main: "#F4F6F8",
@@ -46,6 +45,11 @@ const theme = createTheme({
       fontSize: 14,
       color: "#1a1a1a",
       lineHeight: 1.5
+    },
+    subtitle2: {
+      fontWeight: 600,
+      fontSize: 18,
+      color: "#35A7BB",
     },
     h1: {
       fontWeight: 600,

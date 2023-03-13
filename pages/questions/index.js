@@ -1,5 +1,5 @@
-import { Send, ThumbDown, ThumbUp } from '@mui/icons-material'
-import { Box, Button, IconButton, Typography } from '@mui/material'
+import { Send, ThumbDown, ThumbUp, Cached } from '@mui/icons-material'
+import { Box, Button, IconButton, Typography, Divider } from '@mui/material'
 import { useRouter } from 'next/router'
 import { useContext, useEffect, useRef, useState } from 'react'
 import { create_question, dislike_question, like_question, feedback_question } from '../../API/questions'
@@ -36,7 +36,7 @@ const css = {
   buttons: {
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'flex-end',
+    justifyContent: 'center',
     gap: 2,
     marginTop: 1
   },
@@ -51,20 +51,32 @@ const css = {
   waiting_time: {
     textAlign: 'left',
     fontWeight: 'bold'
-
+  },
+  disclaimer: {
+    textAlign: 'right'
+  },
+  title: {
+    fontWeight: 'bold'
+  },
+  question: {
+    textAlign: 'center',
+    fontWeight: 'bold',
+    marginTop: 20
   }
 }
 
 function Questions({ value }) {
 
-  const { lang } = useContext(AppContext)
-  const [D, T] = useTranslate(lang, "main")
-  const [question, setQuestion] = useState({})
-  const router = useRouter()
-  const [content, setContent] = useState(router.query.content)
-  const answerRect = useRef(null)
-  const [loading, setLoading] = useState(false)
-  const [asked, setAsked] = useState(false)
+  const { lang } = useContext(AppContext);
+  const [D, T] = useTranslate(lang, "main");
+  const [question, setQuestion] = useState({});
+  const router = useRouter();
+  const [content, setContent] = useState(router.query.content);
+  const answerRect = useRef(null);
+  const [loading, setLoading] = useState(false);
+  const [asked, setAsked] = useState(false);
+  const [attempt, setAttempt] = useState(0);
+  const [retry, setRetry] = useState(true);
 
   const [showPopup, setShowPopup] = useState(false);
   const [thanksFeedback, setThanksFeedback] = useState(false);
@@ -95,17 +107,34 @@ function Questions({ value }) {
     }
   }, [asked, router.query])
 
+  useEffect(() => {
+    if (attempt == 3 || attempt == 0) {
+      setRetry(true)
+    } else {
+      setRetry(false)
+    }
+  }, [attempt])
+
   async function createQuestion(e, forced_content = "") {
-    const body = { content: forced_content ? forced_content : content, lang }
-    setThanksFeedback(false)
-    setShowPopup(false)
-    setLoading(true)
-    const response = await create_question(body)
-    console.log(body)
-    setLoading(false)
-    setQuestion(response.data.info)
-    console.log("This is the question")
-    console.log(question)
+    if (attempt == 3) {
+      const body = { content: forced_content ? forced_content : content, lang, attempt: 0 }
+      setThanksFeedback(false)
+      setShowPopup(false)
+      setLoading(true)
+      const response = await create_question(body)
+      setLoading(false)
+      setQuestion(response.data.info)
+      setAttempt(1)
+    } else {
+      const body = { content: forced_content ? forced_content : content, lang, attempt: attempt }
+      setThanksFeedback(false)
+      setShowPopup(false)
+      setLoading(true)
+      const response = await create_question(body)
+      setLoading(false)
+      setQuestion(response.data.info)
+      setAttempt(attempt + 1)
+    }
   }
 
   async function createFeedbackQuestion(e, forced_content = "") {
@@ -159,21 +188,26 @@ function Questions({ value }) {
     <Box>
       <Header />
       <Box sx={css.container}>
+        <Typography variant='h1' style={css.title}>{T(D.title)}</Typography>
         <Typography variant='h4'>{T(D.input_text)}</Typography>
         <TextInput onChange={e => setContent(e.target.value)} value={content} />
         <Box sx={{ textAlign: 'end', margin: '12px 0' }}>
           <Typography style={css.waiting_time} variant='h5'>{T(D.waiting_time_answer)}</Typography>
-          <Button disabled={loading} color="secondary" variant="contained" onClick={createQuestion} endIcon={<Send />}>
-            {/* onClick={createQuestion} PUT IT INTO BUTTON*/}
+          <Button disabled={loading || !retry || !content} color="secondary" variant="contained" onClick={createQuestion} endIcon={<Send />}>
             {T(D.ask)}
           </Button>
         </Box>
         {loading && <Loader />}
-        {/* !!question.answer && !loading && CHANGE IT IN THE NEXT LINE*/}
         {!!question.answer && !loading &&
           <Box>
-            <Typography variant='h4'>{T(D.answer_title)}</Typography>
+            <Divider orientation="horizontal" flexItem />
+            <Typography variant='subtitle2'>{T(D.answer_title) + attempt + "/3)"}</Typography>
             <textarea readOnly style={css.textarea} ref={answerRect} />
+            <Typography style={css.disclaimer} variant='h5'>{T(D.disclaimer)}</Typography>
+            <Button disabled={retry || !content} color="info" variant="contained" onClick={createQuestion} endIcon={<Cached />}>
+              {T(D.change_prompt)}
+            </Button>
+            <Typography style={css.question} variant='h4'>{T(D.usefull)}</Typography>
             <Box sx={css.buttons}>
               <IconButton sx={isDislike ? css.dislike_mark : {}} color="error" onClick={onValuate(false)}>
                 <ThumbDown />
