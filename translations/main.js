@@ -19,6 +19,26 @@ const main = {
     en: "Go!",
     es: "Enviar pregunta"
   },
+  open_scan_image: {
+    en: "Scan image",
+    es: "Escanear una imagen"
+  },
+  close_scan_image: {
+    en: "Close",
+    es: "Cerrar"
+  },
+  browse_image: {
+    en: "Browse image...",
+    es: "Escoger imagen..."
+  },
+  crop_image: {
+    en: "Crop image",
+    es: "Recortar imagen"
+  },
+  upload_image: {
+    en: "Upload image",
+    es: "Subir imagen"
+  },
   ask_again: {
     en: "Send another question",
     es: "Enviar otra pregunta"
