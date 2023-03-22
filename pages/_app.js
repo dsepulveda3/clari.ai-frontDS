@@ -22,7 +22,7 @@ function MyApp({ Component, pageProps }) {
     <div>
       <Head>
         <title>Clari</title>
-        <meta charset="utf-8" />
+        <meta charSet="utf-8" />
         <link rel="icon" href="/transparente.png" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#000000" />

@@ -8,6 +8,14 @@ export function create_question(body) {
   })
 }
 
+export function create_question_from_photo(body) {
+  return instance({
+    method: 'post',
+    url: 'questions/photo_ocr',
+    data: body
+  })
+}
+
 export function like_question(body) {
   return instance({
     method: 'post',

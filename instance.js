@@ -11,8 +11,10 @@ import axios from "axios"
 // )
 
 const isLocalhost = false
+// const isLocalhost = true
 
-export const mainUrl = `https://clari-staging.herokuapp.com/api`
+export const mainUrl = `https://clariapp.herokuapp.com/api`
+// export const mainUrl = `http://localhost:8080/api`
 
 const instance = axios.create({
   baseURL: mainUrl,

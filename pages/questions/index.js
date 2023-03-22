@@ -2,11 +2,12 @@ import { Send, ThumbDown, ThumbUp, Cached } from '@mui/icons-material'
 import { Box, Button, IconButton, Typography, Divider } from '@mui/material'
 import { useRouter } from 'next/router'
 import { useContext, useEffect, useRef, useState } from 'react'
-import { create_question, dislike_question, like_question, feedback_question } from '../../API/questions'
+import { create_question, create_question_from_photo, dislike_question, like_question, feedback_question } from '../../API/questions'
 import Header from '../../components/Header'
 import Loader from '../../components/Loader'
 import OpinionForm from '../../components/OpinionForm'
 import TextInput from '../../components/TextInput'
+import ImageManager from '../../components/ImageManager'
 import useTranslate from '../../hooks/TranslationHook'
 import theme from '../../styles/theme'
 import { AppContext } from '../_app'
@@ -93,7 +94,9 @@ function Questions({ value }) {
     }
   }, [showPopup]);
 
-
+  // This hook runs every time the question prop
+  // is updated. In short, it displays the 
+  // answer getted from the backend. 
   useEffect(() => {
     if (!!question.answer) {
       answerRect.current.innerHTML = question.answer
@@ -115,6 +118,11 @@ function Questions({ value }) {
     }
   }, [attempt])
 
+  // This function is where the POST request to the backend is done
+  // First, the body is created and then some code is excetued after
+  // the response from the backend arrives.
+  // The setQuestion runs the UseEffect hook assosiated to the displaying
+  // of the answer from the backend.
   async function createQuestion(e, forced_content = "") {
     if (attempt == 3) {
       const body = { content: forced_content ? forced_content : content, lang, attempt: 0 }
@@ -131,6 +139,33 @@ function Questions({ value }) {
       setShowPopup(false)
       setLoading(true)
       const response = await create_question(body)
+      setLoading(false)
+      setQuestion(response.data.info)
+      setAttempt(attempt + 1)
+    }
+  }
+
+  async function createPhotoQuestion(cropData) {
+    // Extract base64 string from the image data
+    const base64_string = cropData.split(",")[1];
+
+    if (attempt == 3) {
+      const body = { content: base64_string ? base64_string : '', lang, attempt: 0 }
+      setThanksFeedback(false)
+      setShowPopup(false)
+      setLoading(true)
+      const response = await create_question_from_photo(body)
+      console.log(response.data.info)
+      setLoading(false)
+      setQuestion(response.data.info)
+      setAttempt(1)
+    } else {
+      const body = { content: base64_string ? base64_string : '', lang, attempt: attempt }
+      setThanksFeedback(false)
+      setShowPopup(false)
+      setLoading(true)
+      const response = await create_question_from_photo(body)
+      console.log(response.data.info)
       setLoading(false)
       setQuestion(response.data.info)
       setAttempt(attempt + 1)
@@ -197,6 +232,7 @@ function Questions({ value }) {
             {T(D.ask)}
           </Button>
         </Box>
+        <ImageManager onSendImageClick={createPhotoQuestion}></ImageManager>
         {loading && <Loader />}
         {!!question.answer && !loading &&
           <Box>
